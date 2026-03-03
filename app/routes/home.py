@@ -1,0 +1,19 @@
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
+
+router = APIRouter()
+
+templates = Jinja2Templates(directory="app/templates")
+
+
+@router.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    """Render the home page."""
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@router.get("/health", response_class=JSONResponse)
+async def health_check():
+    """Simple health-check endpoint."""
+    return {"status": "healthy"}
