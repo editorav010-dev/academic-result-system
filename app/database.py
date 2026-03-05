@@ -1,23 +1,29 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from collections.abc import AsyncGenerator
 
-from app.config import settings
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker, declarative_base
+import os
+from dotenv import load_dotenv
 
-engine = create_async_engine(settings.DATABASE_URL, echo=False)
+load_dotenv()
 
-async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True,
 )
 
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
-class Base(DeclarativeBase):
-    """Declarative base for all ORM models."""
-    pass
+Base = declarative_base()
 
 
-async def get_db():
-    """FastAPI dependency that yields an async database session."""
-    async with async_session() as session:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI dependency that yields an async SQLAlchemy session."""
+    async with AsyncSessionLocal() as session:
         yield session
