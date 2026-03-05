@@ -1,6 +1,6 @@
 import asyncio
 from app.database import engine, Base
-from app.models import user, school_profile, coaching_profile, class_model, student
+from app.models import user, school_profile, coaching_profile, class_model, student, subject_model, exam_model, marks
 
 async def recreate():
     async with engine.begin() as conn:
@@ -8,4 +8,5 @@ async def recreate():
         await conn.run_sync(Base.metadata.create_all)
     print("All tables dropped and recreated successfully!")
 
-asyncio.run(recreate())
+if __name__ == "__main__":
+    asyncio.run(recreate())
