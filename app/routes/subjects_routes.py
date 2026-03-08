@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db
 from app.models.subject_model import Subject
-from app.schemas.subject import SubjectCreate
+from app.schemas.subject_schema import SubjectCreate
 
 router = APIRouter(prefix="/subjects", tags=["Subjects"])
 
